@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ product.title }} | {% endblock %}
+
+{% block content %}
+    {% if product.image %}
+        <figure class="image is-3by2 mb-6">
+            <img src="{{ product.image.url }}">
+        </figure>
+    {% endif %}
+
+    <h1 class="title">{{ product.title }}, Rs. {{ product.price }}</h1>
+    {% if product.reviews.count >= 1 %}
+    <h2 class="subtitle">Rating: {{ product.get_rating | floatformat:1 }}</h2>
+    {% else %}
+    {% endif %}
+    <p class="mb-6"><span class="tag is-dark">{{ product.seller.name }}</span></p>
+    <p>{{ product.description }}</p>
+    <hr>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="notification is-success is-toast">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if product.in_cart%}
+        <p>Product is already in cart</p>
+    {% else %}
+        {% if product.num_available > 0 %}
+        <form method="post" action=".">
+            {% csrf_token %}
+
+            <div class="field has-addons">
+            <div class="control">
+                <input type="number" name="quantity" value="1" class="input" min="1">
+            </div>
+
+            <div class="control">
+                <button class="button is-dark is-uppercase" name="add">Add to cart</button>
+            </div>
+            </div>
+        </form>
+        {% else %}
+            <p>The product is out of stock</p>
+        {% endif %}
+    {% endif %}
+    
+
+    {% if similar_products %}
+        <hr>
+        <div class="columns is-multiline">
+            <div class="column is-12">
+                <h2 class="subtitle">Similar products</h2>
+            </div>
+
+            {% for product in similar_products %}
+                {% include 'product/parts/list_item.html' %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <hr>
+    
+    <div class="reviews-wrapper"}>
+        {% for review in product.reviews.all %}
+            <div class="notification" style="margin-bottom: 20px">
+                <P>
+                    <strong>{{review.customer.name}}</strong><br>
+                    <strong>Date: </strong>{{ review.date_added|date:"d-m-Y"}},
+                    <strong>Rating: </strong>{{ review.rating }}
+                </P>
+
+                {{ review.content }}
+            </div>
+        {% empty %}
+            <div class="notification" style="margin-bottom: 20px">This product has no reviews Yet...</div>
+        {% endfor %}
+    </div>
+
+    <div class="notification" style="margin-bottom: 20px">
+        {% if request.user.is_authenticated %}
+        <form method="post" action=".">
+            {% csrf_token %}
+            <div class="field">
+                <label>Rating</label>
+                <div class="control">
+                    <div class="select">
+                        <select name=rating>
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Content</label>
+                <div class="control">
+                    <textarea class="textarea" name="content"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button">Submit</button>
+                </div>
+            </div>
+        </form>
+        {% else %}
+            <p>Please sign in to add review</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

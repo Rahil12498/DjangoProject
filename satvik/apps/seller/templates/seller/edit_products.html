@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% block content %}
+    <h1 class="title">Edit quantity</h1>
+    <div class="columns">
+      <div class="column is-6 is-offset-3">
+          
+          <form method = post action=".">
+            <div class="field" style="margin-top:5px">
+              <h2 class="title">{{ product.title }}</h2><br></div>
+            
+            {% csrf_token %}
+            <h2 class="title">{{ product.title }}</h2><br></div>
+            <input type="number" name="quantity"><br>
+            <div class="field" style="margin-top:5px">
+              <div class="control">
+            <button class= "button is-dark is-uppercase">Submit</button>
+              </div>
+              </div>
+
+            </form>
+   </div>
+    </div>
+{% endblock %}

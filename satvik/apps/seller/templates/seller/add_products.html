@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Add product | {% endblock %}
+
+{% block content %}
+    <h1 class="title">Add product</h1>
+    <div class="columns">
+        <div class="column is-6 is-offset-3">
+    <form method="post" action="." enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <div class="field" style="margin-top:5px">
+            <div class="control">
+                <button class="button is-dark is-uppercase">Submit</button>
+            </div>
+        </div>
+    </form>
+    </div>
+    </div>
+{% endblock %}

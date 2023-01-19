@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Edit Customer | {% endblock %}
+
+{% block content %}
+    <h1 class="title">Edit seller</h1>
+
+    <form method="post" action=".">
+        {% csrf_token %}
+
+        <div class="field">
+            <label>Customer last name</label>
+
+            <div class="control">
+                <input type="text" name="last_name" id="id_last_name" value="{{ customer.last_name }}" class="input">
+            </div>
+
+            <p class="help">This is not the same as the username!</p>
+        </div>
+
+        <div class="field">
+            <label>E-mail</label>
+
+            <div class="control">
+                <input type="email" name="email" id="id_email" value="{{ customer.email }}" class="input">
+            </div>
+        </div>
+
+        <div class="field">
+          <label>Address</label>
+
+          <div class="control">
+              <input type="text" name="address" id="id_address" value="{{ customer.address }}" class="input">
+          </div>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-dark is-uppercase">Save changes</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}

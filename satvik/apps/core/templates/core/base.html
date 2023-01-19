@@ -1,0 +1,97 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{% endblock %}Satvik</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{%static 'styles/main.css'%}"/>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="{%static 'scripts/main.js'%}"></script>
+  </head>
+  <body>
+    <nav class="navbar is-dark">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-item"><strong>Satvik</strong></a>
+
+        <a
+          role="button"
+          class="navbar-burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="main-navbar"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="navbar-menu" id="main-navbar">
+        <div class="navbar-start">
+          <div class="navbar-item">
+              <form method="get" action="{% url 'search' %}">
+                  <div class="field has-addons">
+                      <div class="control">
+                          <input type="text" class="input" placeholder="Search..." name="query">
+                      </div>
+                      <div class="control">
+                          <button class="button is-dark is-uppercase">Search</button>
+                      </div>
+                  </div>
+              </form>
+          </div>
+      </div>
+        <div class="navbar-end">
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link">Categories</a>
+            <div class="navbar-dropdown">
+              {% for category in menu_categories %}
+              <a href="{% url 'category' category.slug %}" class="navbar-item">{{ category.title }}</a>
+              {% endfor %}
+            </div>
+          </div>
+          {% if request.user.is_authenticated %}
+            {% if request.user.username == request.user.seller.name %}
+              <a class = "navbar-item" href="{% url 'seller_admin' %}">Seller Panel</a>
+            {% else %}
+              <a class = "navbar-item" href="{% url 'customer_account' %}">My Account</a>
+            {% endif %}
+          {% else %}
+          <a class="navbar-item" href={%url 'signup' %}>SignUp</a>
+          <a class="navbar-item" href={%url 'login' %}>Login</a>
+          {% endif %}
+          <a class="navbar-item" href={%url 'contact' %}>Contact</a>
+          <div class="navbar-item">
+            <a href ="{% url 'cart' %}" class="button is-dark"><span class="icon"></span>
+              <i class="fas fa-shopping-cart"></i>
+            </span>Cart{%if cart%}({{cart|length}}){%endif%}</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <section class = "section">
+      <div class="container">
+        {% block content %} {% endblock %}
+      </div>
+    </section>
+    <footer class="footer has-text-centered">
+      <h3 class="is-size-4 mb-4">Satvik</h3>
+      <a href="{% url 'sellers' %}" class="button is-dark">View all Sellers</a>
+      {% if request.user.is_authenticated %}
+      {% else %}  
+      <a href="{% url 'become_seller' %}" class="button is-dark">Become Seller</a>
+      {% endif %}
+    </footer>
+
+    {% block scripts %}
+    {% endblock %}
+
+
+  </body>
+</html>
